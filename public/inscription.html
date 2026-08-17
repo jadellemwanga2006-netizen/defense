@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion - Bomengo ya Muasi</title>
+  <style>
+    :root {
+      --rose: #f25ca7;
+      --rose-fonce: #d13373;
+      --rose-clair: #fef0f6;
+      --violet: #7a57d8;
+      --gris: #6a5f70;
+      --fond: #fff8fb;
+      --blanc: #ffffff;
+      --ligne: #eed9e5;
+      --noir: #201724;
+      --vert: #1f9d66;
+      --rouge: #c63d47;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff5fa 0%, #f7f0ff 100%);
+      color: var(--noir);
+      display: grid;
+      place-items: center;
+      padding: 32px 18px;
+    }
+
+    .coque-page {
+      width: min(1100px, 100%);
+      display: grid;
+      grid-template-columns: 1.05fr 1.2fr;
+      background: var(--blanc);
+      border: 1px solid var(--ligne);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 75px rgba(158, 85, 123, 0.18);
+    }
+
+    .panneau-gauche {
+      background: linear-gradient(160deg, #fdeaf3 0%, #f7d9ea 50%, #f5d0f0 100%);
+      padding: 30px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .titre-promo {
+      font-size: clamp(2rem, 3vw, 2.6rem);
+      line-height: 1.1;
+      margin: 0 0 12px;
+      color: var(--rose-fonce);
+      max-width: 360px;
+      font-weight: 900;
+    }
+
+    .sous-titre-promo {
+      font-size: 1.1rem;
+      color: var(--violet);
+      margin: 0 0 16px;
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .texte-promo {
+      color: var(--gris);
+      line-height: 1.7;
+      max-width: 360px;
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .avantages-promo {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+      text-align: left;
+      max-width: 320px;
+    }
+
+    .avantages-promo li {
+      padding: 6px 0;
+      color: var(--gris);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avantages-promo li::before {
+      content: "✨";
+    }
+
+    .panneau-droite {
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3vw, 2.6rem);
+      margin: 0 0 8px;
+    }
+
+    .sous-titre {
+      color: var(--gris);
+      margin: 0 0 26px;
+      line-height: 1.6;
+    }
+
+    .formulaire-authentification {
+      display: grid;
+      gap: 16px;
+    }
+
+    .formulaire-cache {
+      display: none !important;
+    }
+
+    .champ {
+      display: grid;
+      gap: 8px;
+    }
+
+    .champ label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #9a7f8d;
+      font-weight: 700;
+    }
+
+    .champ input {
+      width: 100%;
+      border: 1px solid var(--ligne);
+      border-radius: 14px;
+      background: #fffafc;
+      padding: 14px 16px;
+      font-size: 1rem;
+      color: var(--noir);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .champ input:focus {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(242, 92, 167, 0.12);
+    }
+
+    .champ input.erreur {
+      border-color: var(--rouge);
+      box-shadow: 0 0 0 4px rgba(198, 61, 71, 0.12);
+    }
+
+    .message-erreur {
+      color: var(--rouge);
+      font-size: 0.8rem;
+      margin-top: -4px;
+      display: none;
+    }
+
+    .message-erreur.visible {
+      display: block;
+    }
+
+    .bouton-principal {
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-fonce));
+      color: white;
+      font-weight: 700;
+      padding: 16px 18px;
+      cursor: pointer;
+      box-shadow: 0 18px 25px rgba(209, 51, 115, 0.24);
+      transition: 0.2s ease;
+      margin-top: 6px;
+      font-size: 1rem;
+    }
+
+    .bouton-principal:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 28px rgba(209, 51, 115, 0.28);
+    }
+
+    .ligne-info {
+      text-align: center;
+      color: var(--gris);
+      font-size: 0.92rem;
+      margin-top: 18px;
+    }
+
+    .ligne-info a {
+      color: var(--rose-fonce);
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .ligne-info a:hover {
+      text-decoration: underline;
+    }
+
+    .separateur {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+      color: var(--gris);
+      font-size: 0.8rem;
+    }
+
+    .separateur::before,
+    .separateur::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--ligne);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(20px);
+      background: #1f2937;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s ease;
+      box-shadow: 0 18px 35px rgba(31, 41, 55, 0.2);
+      z-index: 1000;
+    }
+
+    .toast.affiche {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.erreur {
+      background: var(--rouge);
+    }
+
+    .toast.succes {
+      background: var(--vert);
+    }
+
+    @media (max-width: 900px) {
+      .coque-page { grid-template-columns: 1fr; }
+      .panneau-gauche { padding-bottom: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="coque-page">
+    <!-- Panneau de gauche : résumé Bomengo ya muasi -->
+    <aside class="panneau-gauche">
+      <h2 class="titre-promo">Bomengo ya Muasi</h2>
+      <p class="sous-titre-promo">La richesse de la femme 💎</p>
+
+      <p class="texte-promo">
+        Découvrez un espace unique dédié à l'épanouissement féminin. Gérez votre activité, valorisez vos talents et rayonnez chaque jour.
+      </p>
+
+      <ul class="avantages-promo">
+        <li>Suivi personnalisé</li>
+        <li>Espace privé sécurisé</li>
+        <li>Accès rapide 24/7</li>
+      </ul>
+    </aside>
+
+    <!-- Panneau de droite : formulaire de connexion / inscription -->
+    <main class="panneau-droite">
+      <!-- ========= FORMULAIRE DE CONNEXION ========= -->
+      <div id="bloc-connexion">
+        <h1 id="titre-connexion">Connexion</h1>
+        <p class="sous-titre">Renseignez vos identifiants pour accéder à votre espace.</p>
+
+        <form id="formulaire-connexion" class="formulaire-authentification">
+          <div class="champ">
+            <label for="email-connexion">Email</label>
+            <input id="email-connexion" name="email" type="email" placeholder="exemple@email.com" required />
+          </div>
+
+          <div class="champ">
+            <label for="motdepasse-connexion">Mot de passe</label>
+            <input id="motdepasse-connexion" name="motDePasse" type="password" placeholder="••••••••" required />
+          </div>
+
+          <button type="submit" class="bouton-principal">Se connecter</button>
+        </form>
+
+        <div class="ligne-info">
+          Pas encore de compte ?
+          <a onclick="afficherFormulaire('inscription')">Créer un compte</a>
+        </div>
+      </div>
+
+      <!-- ========= FORMULAIRE D'INSCRIPTION ========= -->
+      <div id="bloc-inscription" class="formulaire-cache">
+        <h1 id="titre-inscription">Inscription</h1>
+        <p class="sous-titre">Créez votre compte et rejoignez la communauté Bomengo.</p>
+
+        <form id="formulaire-inscription" class="formulaire-authentification">
+          <div class="champ">
+            <label for="nom-inscription">Nom complet</label>
+            <input id="nom-inscription" name="nom" type="text" placeholder="Ex: Aline Mwasi" required minlength="2" />
+          </div>
+
+          <div class="champ">
+            <label for="email-inscription">Email</label>
+            <input id="email-inscription" name="email" type="email" placeholder="exemple@email.com" required />
+            <span class="message-erreur" id="erreur-email-inscription"></span>
+          </div>
+
+          <div class="champ">
+            <label for="motdepasse-inscription">Mot de passe</label>
+            <input id="motdepasse-inscription" name="motDePasse" type="password" placeholder="Minimum 6 caractères" required minlength="6" />
+          </div>
+
+          <div class="champ">
+            <label for="confirmation-inscription">Confirmer le mot de passe</label>
+            <input id="confirmation-inscription" name="confirmation" type="password" placeholder="••••••••" required minlength="6" />
+            <span class="message-erreur" id="erreur-confirmation-inscription"></span>
+          </div>
+
+          <button type="submit" class="bouton-principal">Créer mon compte</button>
+        </form>
+
+        <div class="ligne-info">
+          Déjà inscrit ?
+          <a onclick="afficherFormulaire('connexion')">Se connecter</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script type="text/plain">
+    // ==========================================
+    // AFFICHAGE DU TOAST
+    // ==========================================
+    function afficherToast(message, type = "info") {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.className = "toast affiche " + type;
+
+      setTimeout(() => {
+        toast.classList.remove("affiche");
+      }, 3000);
+    }
+
+    // ==========================================
+    // BASCULE ENTRE CONNEXION ET INSCRIPTION
+    // ==========================================
+    function afficherFormulaire(mode) {
+      const blocConnexion = document.getElementById("bloc-connexion");
+      const blocInscription = document.getElementById("bloc-inscription");
+
+      if (mode === "inscription") {
+        blocConnexion.classList.add("formulaire-cache");
+        blocInscription.classList.remove("formulaire-cache");
+      } else {
+        blocInscription.classList.add("formulaire-cache");
+        blocConnexion.classList.remove("formulaire-cache");
+      }
+
+      // Nettoyer les erreurs
+      document.querySelectorAll(".message-erreur").forEach(el => {
+        el.classList.remove("visible");
+        el.textContent = "";
+      });
+      document.querySelectorAll("input.erreur").forEach(el => {
+        el.classList.remove("erreur");
+      });
+    }
+
+    // ==========================================
+    // GESTION DU STOCKAGE
+    // ==========================================
+    function recupererUtilisateurs() {
+      const donnees = localStorage.getItem("bomengo_utilisateurs");
+      return donnees ? JSON.parse(donnees) : [];
+    }
+
+    function sauvegarderUtilisateurs(utilisateurs) {
+      localStorage.setItem("bomengo_utilisateurs", JSON.stringify(utilisateurs));
+    }
+
+    function creerSession(utilisateur) {
+      // On ne stocke pas le mot de passe dans la session
+      const { motDePasse, ...session } = utilisateur;
+      localStorage.setItem("bomengo_session", JSON.stringify(session));
+    }
+
+    // ==========================================
+    // FORMULAIRE DE CONNEXION
+    // ==========================================
+    document.getElementById("formulaire-connexion").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email-connexion").value.trim().toLowerCase();
+      const motDePasse = document.getElementById("motdepasse-connexion").value;
+
+      afficherToast("Connexion en cours...", "info");
+
+      // Petite simulation de délai
+      setTimeout(() => {
+        const utilisateurs = recupererUtilisateurs();
+        const utilisateur = utilisateurs.find(
+          u => u.email.toLowerCase() === email && u.motDePasse === motDePasse
+        );
+
+        if (!utilisateur) {
+          afficherToast("❌ Email ou mot de passe incorrect", "erreur");
+          return;
+        }
+
+        // Créer la session
+        creerSession(utilisateur);
+        afficherToast("✅ Connexion réussie ! Redirection...", "succes");
+
+        setTimeout(() => {
+          window.location.href = "/dashboard-user";
+        }, 1000);
+      }, 800);
+    });
+
+    // ==========================================
+    // FORMULAIRE D'INSCRIPTION
+    // ==========================================
+    document.getElementById("formulaire-inscription").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const nom = document.getElementById("nom-inscription").value.trim();
+      const email = document.getElementById("email-inscription").value.trim().toLowerCase();
+      const motDePasse = document.getElementById("motdepasse-inscription").value;
+      const confirmation = document.getElementById("confirmation-inscription").value;
+
+      // Réinitialiser les erreurs
+      document.querySelectorAll(".message-erreur").forEach(el => {
+        el.classList.remove("visible");
+        el.textContent = "";
+      });
+      document.querySelectorAll("input.erreur").forEach(el => {
+        el.classList.remove("erreur");
+      });
+
+      let valide = true;
+
+      // Vérification : mots de passe identiques
+      if (motDePasse !== confirmation) {
+        const erreur = document.getElementById("erreur-confirmation-inscription");
+        erreur.textContent = "Les mots de passe ne correspondent pas";
+        erreur.classList.add("visible");
+        document.getElementById("confirmation-inscription").classList.add("erreur");
+        valide = false;
+      }
+
+      // Vérification : email déjà utilisé
+      const utilisateurs = recupererUtilisateurs();
+      const emailExiste = utilisateurs.find(u => u.email.toLowerCase() === email);
+      if (emailExiste) {
+        const erreur = document.getElementById("erreur-email-inscription");
+        erreur.textContent = "Cet email est déjà utilisé. Connectez-vous.";
+        erreur.classList.add("visible");
+        document.getElementById("email-inscription").classList.add("erreur");
+        valide = false;
+      }
+
+      if (!valide) {
+        afficherToast("⚠️ Veuillez corriger les erreurs", "erreur");
+        return;
+      }
+
+      afficherToast("Création du compte en cours...", "info");
+
+      setTimeout(() => {
+        // Créer le nouvel utilisateur
+        const nouvelUtilisateur = {
+          id: Date.now(),
+          nom: nom,
+          email: email,
+          motDePasse: motDePasse, // ⚠️ À remplacer par un hash en production
+          role: "Utilisatrice",
+          solde: 0,
+          dateInscription: new Date().toISOString()
+        };
+
+        // Ajouter à la liste globale (pour l'admin)
+        utilisateurs.push(nouvelUtilisateur);
+        sauvegarderUtilisateurs(utilisateurs);
+
+        // Créer automatiquement la session
+        creerSession(nouvelUtilisateur);
+
+        afficherToast("🎉 Compte créé avec succès ! Redirection...", "succes");
+
+        setTimeout(() => {
+          window.location.href = "/dashboard-user";
+        }, 1200);
+      }, 800);
+    });
+
+    // ==========================================
+    // VÉRIFICATION AU CHARGEMENT
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Si déjà connecté, rediriger directement
+      const session = localStorage.getItem("bomengo_session");
+      if (session) {
+        window.location.href = "/dashboard-user";
+      }
+    });
+  </script>
+  <script src="/js/inscription.js" defer></script>
+</body>
+</html>

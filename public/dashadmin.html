@@ -1,0 +1,807 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administration - Bomengo Ya Mwasi</title>
+  <style>
+    :root {
+      --rose: #f25ca7;
+      --rose-fonce: #d13373;
+      --violet: #7a57d8;
+      --gris: #6a5f70;
+      --blanc: #ffffff;
+      --noir: #201724;
+      --vert: #1f9d66;
+      --rouge: #d3494d;
+      --jaune: #e7a93f;
+      --ligne: #eed9e5;
+      --fond: #fffafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #fff8fb 0%, #f4ecff 100%);
+      color: var(--noir);
+    }
+
+    .application {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    .barre-laterale {
+      background: linear-gradient(180deg, #150e18 0%, #221529 100%);
+      color: white;
+      padding: 26px 18px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .marque {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .logo-marque {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-fonce));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .nom-marque {
+      font-weight: 700;
+    }
+
+    .nom-marque small {
+      display: block;
+      color: #d9bfd4;
+      font-size: 0.72rem;
+    }
+
+    .titre-navigation {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: #c6b3cd;
+      margin: 20px 0 12px 10px;
+    }
+
+    .bouton-navigation {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #d9cce1;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .bouton-navigation.actif,
+    .bouton-navigation:hover {
+      background: rgba(242, 92, 167, 0.2);
+      color: white;
+      border-left: 4px solid var(--rose);
+    }
+
+    .contenu-principal {
+      padding: 18px 24px 30px;
+      overflow-y: auto;
+    }
+
+    .barre-haut {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--ligne);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .badge-admin {
+      background: var(--rouge);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    .pilule-utilisateur {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--ligne);
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #333, #000);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 700;
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .carte {
+      background: var(--blanc);
+      border: 1px solid var(--ligne);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .indicateur {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .etiquette-indicateur {
+      color: var(--gris);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .valeur-indicateur {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .icone-indicateur {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .fond-rose {
+      background: #ffe9f6;
+      color: var(--rose-fonce);
+    }
+
+    .fond-vert {
+      background: #eafaf2;
+      color: var(--vert);
+    }
+
+    .fond-bleu {
+      background: #eef2ff;
+      color: var(--violet);
+    }
+
+    .titre-section {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+      color: var(--noir);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--ligne);
+    }
+
+    th {
+      color: var(--gris);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      background: #fafafa;
+    }
+
+    tr:hover {
+      background: #fffafc;
+    }
+
+    .statut {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    .statut.actif {
+      background: #eafaf2;
+      color: var(--vert);
+    }
+
+    .statut.en-attente {
+      background: #fff1da;
+      color: var(--jaune);
+    }
+
+    .bouton-action {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .bouton-voir {
+      background: #eef2ff;
+      color: var(--violet);
+    }
+
+    .bouton-supprimer {
+      background: #ffebee;
+      color: var(--rouge);
+    }
+
+    .message-vide {
+      color: var(--gris);
+      padding: 40px 20px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .section-vue {
+      display: none;
+      animation: apparition 0.3s ease;
+    }
+
+    .section-vue.active {
+      display: block;
+    }
+
+    @keyframes apparition {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .application {
+        grid-template-columns: 1fr;
+      }
+      .grille {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="application">
+    <!-- Barre latérale -->
+    <aside class="barre-laterale">
+      <div class="marque">
+        <div class="logo-marque">B</div>
+        <div class="nom-marque">
+          Bomengo
+          <small>Admin Panel</small>
+        </div>
+      </div>
+
+      <div>
+        <p class="titre-navigation">Gestion</p>
+        <button class="bouton-navigation actif" onclick="changerVue('tableau-de-bord', this)">
+          📊 Tableau de bord
+        </button>
+        <button class="bouton-navigation" onclick="changerVue('utilisateurs', this)">
+          👥 Utilisateurs
+        </button>
+        <button class="bouton-navigation" onclick="changerVue('transactions', this)">
+          💰 Transactions Globales
+        </button>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 20px">
+        <button class="bouton-navigation" style="color: #ff8a80" onclick="window.location.href='/'">
+          🚪 Déconnexion
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="contenu-principal">
+      <header class="barre-haut">
+        <h1 id="titre-page">Vue d'ensemble <span class="badge-admin">ADMIN</span></h1>
+        <div class="pilule-utilisateur">
+          <div class="avatar">A</div>
+          <div>
+            <strong>Administrateur</strong><br />
+            <small>Super Admin</small>
+          </div>
+        </div>
+      </header>
+
+      <!-- VUE 1: TABLEAU DE BORD -->
+      <div id="vue-tableau-de-bord" class="section-vue active">
+        <section class="grille">
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Total Utilisateurs</div>
+              <div class="valeur-indicateur" id="total-utilisateurs">0</div>
+            </div>
+            <div class="icone-indicateur fond-bleu">👥</div>
+          </div>
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Total Transactions</div>
+              <div class="valeur-indicateur" id="total-transactions">0</div>
+            </div>
+            <div class="icone-indicateur fond-vert">💰</div>
+          </div>
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Volume Global</div>
+              <div class="valeur-indicateur" id="volume-global">0 $</div>
+            </div>
+            <div class="icone-indicateur fond-rose">📈</div>
+          </div>
+        </section>
+
+        <section class="carte">
+          <div class="titre-section">
+            <span>Dernières transactions</span>
+            <button
+              class="bouton-action bouton-voir"
+              onclick="changerVue('transactions', document.querySelectorAll('.bouton-navigation')[2])"
+            >
+              Voir tout
+            </button>
+          </div>
+          <table id="tableau-dernieres-transactions">
+            <thead>
+              <tr>
+                <th>Utilisateur</th>
+                <th>Type</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="corps-tableau-dernieres-transactions">
+              <tr>
+                <td colspan="5" class="message-vide">Aucune transaction pour le moment</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- VUE 2: LISTE UTILISATEURS -->
+      <div id="vue-utilisateurs" class="section-vue">
+        <section class="carte">
+          <div class="titre-section">
+            <span>Gestion des membres</span>
+            <input
+              type="text"
+              id="recherche-utilisateur"
+              placeholder="Rechercher un membre..."
+              style="
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-size: 0.9rem;
+              "
+            />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom Complet</th>
+                <th>Email</th>
+                <th>Solde</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="corps-tableau-utilisateurs">
+              <tr>
+                <td colspan="5" class="message-vide">
+                  Aucun utilisateur enregistré
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- VUE 3: TRANSACTIONS GLOBALES -->
+      <div id="vue-transactions" class="section-vue">
+        <section class="carte">
+          <div class="titre-section">
+            <span>Journal des transactions</span>
+            <button class="bouton-action bouton-voir" onclick="actualiserTransactions()">
+              🔄 Actualiser
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID Transaction</th>
+                <th>Utilisateur</th>
+                <th>Type</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="corps-tableau-transactions">
+              <tr>
+                <td colspan="6" class="message-vide">
+                  Aucune transaction enregistrée. Les transactions des
+                  utilisateurs apparaîtront ici automatiquement.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ==========================================
+    // SYSTÈME DE DONNÉES RÉELLES
+    // ==========================================
+
+    // Fonction pour récupérer les utilisateurs depuis le stockage local
+    function recupererUtilisateurs() {
+      const donnees = localStorage.getItem("bomengo_utilisateurs");
+      return donnees ? JSON.parse(donnees) : [];
+    }
+
+    // Fonction pour récupérer les transactions depuis le stockage local
+    function recupererTransactions() {
+      const donnees = localStorage.getItem("bomengo_transactions");
+      return donnees ? JSON.parse(donnees) : [];
+    }
+
+    // ==========================================
+    // INITIALISATION
+    // ==========================================
+
+    document.addEventListener("DOMContentLoaded", () => {
+      afficherUtilisateurs();
+      afficherTransactions();
+      mettreAJourStatistiques();
+
+      // Recherche en temps réel
+      document
+        .getElementById("recherche-utilisateur")
+        .addEventListener("input", afficherUtilisateurs);
+
+      // Actualisation automatique toutes les 5 secondes
+      setInterval(() => {
+        afficherTransactions();
+        mettreAJourStatistiques();
+      }, 5000);
+    });
+
+    // ==========================================
+    // NAVIGATION ENTRE VUES
+    // ==========================================
+
+    function changerVue(nomVue, boutonElement) {
+      document
+        .querySelectorAll(".section-vue")
+        .forEach((el) => el.classList.remove("active"));
+      document.getElementById("vue-" + nomVue).classList.add("active");
+
+      if (boutonElement) {
+        document
+          .querySelectorAll(".bouton-navigation")
+          .forEach((btn) => btn.classList.remove("actif"));
+        boutonElement.classList.add("actif");
+      }
+
+      const titres = {
+        "tableau-de-bord": "Vue d'ensemble",
+        utilisateurs: "Gestion des utilisateurs",
+        transactions: "Transactions globales",
+      };
+      document.getElementById("titre-page").innerHTML =
+        titres[nomVue] + ' <span class="badge-admin">ADMIN</span>';
+    }
+
+    // ==========================================
+    // AFFICHAGE DES UTILISATEURS
+    // ==========================================
+
+    function afficherUtilisateurs() {
+      const utilisateurs = recupererUtilisateurs();
+      const recherche = document.getElementById("recherche-utilisateur").value.toLowerCase();
+      const corpsTableau = document.getElementById("corps-tableau-utilisateurs");
+
+      const utilisateursFiltres = utilisateurs.filter(
+        (u) =>
+          u.nom.toLowerCase().includes(recherche) ||
+          u.email.toLowerCase().includes(recherche)
+      );
+
+      if (utilisateursFiltres.length === 0) {
+        corpsTableau.innerHTML = `
+          <tr>
+            <td colspan="5" class="message-vide">
+              ${recherche ? "Aucun résultat trouvé" : "Aucun utilisateur enregistré"}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      corpsTableau.innerHTML = utilisateursFiltres
+        .map(
+          (user) => `
+        <tr>
+          <td>#${user.id}</td>
+          <td><strong>${user.nom}</strong></td>
+          <td>${user.email}</td>
+          <td style="font-weight:bold; color:var(--vert);">${user.solde || 0} $</td>
+          <td>
+            <button class="bouton-action bouton-voir" onclick="voirDetailsUtilisateur(${user.id})">
+              👁 Voir
+            </button>
+            <button class="bouton-action bouton-supprimer" onclick="supprimerUtilisateur(${user.id})">
+              🗑 Suppr
+            </button>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+    }
+
+    // ==========================================
+    // AFFICHAGE DES TRANSACTIONS
+    // ==========================================
+
+    function afficherTransactions() {
+      const transactions = recupererTransactions();
+      const corpsTableau = document.getElementById("corps-tableau-transactions");
+      const corpsTableauDernieres = document.getElementById(
+        "corps-tableau-dernieres-transactions"
+      );
+
+      // Tableau complet des transactions
+      if (transactions.length === 0) {
+        corpsTableau.innerHTML = `
+          <tr>
+            <td colspan="6" class="message-vide">
+              Aucune transaction enregistrée. Les transactions des utilisateurs apparaîtront ici automatiquement.
+            </td>
+          </tr>
+        `;
+        corpsTableauDernieres.innerHTML = `
+          <tr>
+            <td colspan="5" class="message-vide">Aucune transaction pour le moment</td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Tri par date décroissante
+      const transactionsTriees = [...transactions].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+
+      // Toutes les transactions
+      corpsTableau.innerHTML = transactionsTriees
+        .map(
+          (trans) => `
+        <tr>
+          <td>#${trans.id}</td>
+          <td><strong>${trans.utilisateurNom || "Utilisateur #" + trans.utilisateurId}</strong></td>
+          <td>${trans.type}</td>
+          <td style="font-weight:bold; color:${
+            trans.type === "dépôt" ? "var(--vert)" : "var(--rouge)"
+          };">
+            ${trans.type === "dépôt" ? "+" : "-"}${trans.montant} $
+          </td>
+          <td>${new Date(trans.date).toLocaleString("fr-FR")}</td>
+          <td>
+            <span class="statut ${
+              trans.statut === "réussie" ? "actif" : "en-attente"
+            }">
+              ${trans.statut}
+            </span>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+
+      // 5 dernières transactions sur le tableau de bord
+      const dernieres = transactionsTriees.slice(0, 5);
+      corpsTableauDernieres.innerHTML = dernieres
+        .map(
+          (trans) => `
+        <tr>
+          <td><strong>${trans.utilisateurNom || "Utilisateur #" + trans.utilisateurId}</strong></td>
+          <td>${trans.type}</td>
+          <td style="font-weight:bold; color:${
+            trans.type === "dépôt" ? "var(--vert)" : "var(--rouge)"
+          };">
+            ${trans.type === "dépôt" ? "+" : "-"}${trans.montant} $
+          </td>
+          <td>${new Date(trans.date).toLocaleDateString("fr-FR")}</td>
+          <td>
+            <span class="statut ${
+              trans.statut === "réussie" ? "actif" : "en-attente"
+            }">
+              ${trans.statut}
+            </span>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+    }
+
+    // ==========================================
+    // STATISTIQUES DU TABLEAU DE BORD
+    // ==========================================
+
+    function mettreAJourStatistiques() {
+      const utilisateurs = recupererUtilisateurs();
+      const transactions = recupererTransactions();
+
+      document.getElementById("total-utilisateurs").textContent = utilisateurs.length;
+      document.getElementById("total-transactions").textContent = transactions.length;
+
+      const volumeTotal = transactions.reduce((total, t) => {
+        return total + (t.type === "dépôt" ? t.montant : -t.montant);
+      }, 0);
+
+      document.getElementById("volume-global").textContent = volumeTotal + " $";
+    }
+
+    function actualiserTransactions() {
+      afficherTransactions();
+      mettreAJourStatistiques();
+      alert("✅ Transactions actualisées !");
+    }
+
+    // ==========================================
+    // ACTIONS UTILISATEURS
+    // ==========================================
+
+    function voirDetailsUtilisateur(id) {
+      const utilisateurs = recupererUtilisateurs();
+      const user = utilisateurs.find((u) => u.id === id);
+
+      if (!user) {
+        alert("Utilisateur introuvable");
+        return;
+      }
+
+      const transactionsUser = recupererTransactions().filter(
+        (t) => t.utilisateurId === id
+      );
+
+      const details = `
+👤 ${user.nom}
+📧 ${user.email}
+💰 Solde: ${user.solde || 0} $
+
+📊 Historique (${transactionsUser.length} transaction${transactionsUser.length > 1 ? "s" : ""}):
+${transactionsUser
+  .map((t) => `  • ${t.type}: ${t.montant}$ (${new Date(t.date).toLocaleDateString("fr-FR")})`)
+  .join("\n")}
+      `.trim();
+
+      alert(details);
+    }
+
+    function supprimerUtilisateur(id) {
+      if (!confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+        return;
+      }
+
+      let utilisateurs = recupererUtilisateurs();
+      utilisateurs = utilisateurs.filter((u) => u.id !== id);
+      localStorage.setItem("bomengo_utilisateurs", JSON.stringify(utilisateurs));
+
+      // Supprimer aussi ses transactions
+      let transactions = recupererTransactions();
+      transactions = transactions.filter((t) => t.utilisateurId !== id);
+      localStorage.setItem("bomengo_transactions", JSON.stringify(transactions));
+
+      afficherUtilisateurs();
+      afficherTransactions();
+      mettreAJourStatistiques();
+      alert("✅ Utilisateur supprimé avec succès");
+    }
+
+    // ==========================================
+    // FONCTION POUR QUE LES USERS AJOUTENT DES TRANSACTIONS
+    // (À appeler depuis la page utilisateur)
+    // ==========================================
+
+    window.ajouterTransaction = function (transaction) {
+      const transactions = recupererTransactions();
+      transaction.id = Date.now();
+      transaction.date = new Date().toISOString();
+      transactions.push(transaction);
+      localStorage.setItem("bomengo_transactions", JSON.stringify(transactions));
+
+      // Si on est sur la page admin, actualiser
+      if (document.getElementById("vue-transactions")) {
+        afficherTransactions();
+        mettreAJourStatistiques();
+      }
+    };
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

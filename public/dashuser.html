@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de bord - Bomengo Ya Mwasi</title>
+  <style>
+    :root {
+      --rose: #f25ca7;
+      --rose-fonce: #d13373;
+      --violet: #7a57d8;
+      --gris: #6a5f70;
+      --blanc: #ffffff;
+      --noir: #201724;
+      --vert: #1f9d66;
+      --rouge: #d3494d;
+      --jaune: #e7a93f;
+      --ligne: #eed9e5;
+      --fond: #fffafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #fff8fb 0%, #f4ecff 100%);
+      color: var(--noir);
+    }
+
+    .application {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    .barre-laterale {
+      background: linear-gradient(180deg, #1d1322 0%, #2b1d34 100%);
+      color: white;
+      padding: 26px 18px;
+    }
+
+    .marque {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .logo-marque {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-fonce));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+    }
+
+    .nom-marque { font-weight: 700; }
+    .nom-marque small { display: block; color: #d9bfd4; font-size: 0.72rem; }
+
+    .titre-navigation {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: #c6b3cd;
+      margin: 20px 0 12px 10px;
+    }
+
+    .bouton-navigation {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #d9cce1;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .bouton-navigation.actif, .bouton-navigation:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .contenu-principal { padding: 18px 24px 30px; overflow-y: auto; }
+
+    .barre-haut {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--ligne);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .pilule-utilisateur {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--ligne);
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), #4e3f95);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 700;
+    }
+
+    .bouton-deconnexion {
+      background: transparent;
+      border: 1px solid var(--ligne);
+      color: var(--rouge);
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: 10px;
+      transition: 0.2s;
+    }
+    .bouton-deconnexion:hover {
+      background: var(--rouge);
+      color: white;
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .carte {
+      background: var(--blanc);
+      border: 1px solid var(--ligne);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .indicateur {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .etiquette-indicateur {
+      color: var(--gris);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .valeur-indicateur {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .icone-indicateur {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    .fond-rose { background: #ffe9f6; color: var(--rose-fonce); }
+    .fond-vert { background: #eafaf2; color: var(--vert); }
+    .fond-or { background: #fff1da; color: var(--jaune); }
+
+    .titre-section {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+      color: var(--noir);
+    }
+
+    .element-activite {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .element-activite:hover { background: var(--fond); }
+
+    .cercle {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      flex-shrink: 0;
+    }
+    .cercle.rose { background: var(--rose); }
+    .cercle.vert { background: var(--vert); }
+    .cercle.or { background: var(--jaune); }
+
+    .element-activite strong { display: block; font-size: 0.92rem; }
+    .element-activite span { color: var(--gris); font-size: 0.78rem; }
+    .mini-etiquette { margin-left: auto; font-size: 0.7rem; color: var(--gris); }
+
+    .message-vide {
+      color: var(--gris);
+      padding: 20px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--ligne); }
+    th { color: var(--gris); font-size: 0.76rem; text-transform: uppercase; }
+    .montant.entree { color: var(--vert); font-weight: 700; }
+    .montant.sortie { color: var(--rouge); font-weight: 700; }
+
+    .section-vue { display: none; animation: apparition 0.3s ease; }
+    .section-vue.active { display: block; }
+
+    @keyframes apparition {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .conteneur-formulaire { max-width: 500px; margin: 0 auto; }
+    .groupe-formulaire { margin-bottom: 15px; }
+    .groupe-formulaire label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--gris);
+      font-size: 0.9rem;
+    }
+    .groupe-formulaire input, .groupe-formulaire select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--ligne);
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+    }
+    .groupe-formulaire input:focus, .groupe-formulaire select:focus { border-color: var(--rose); }
+
+    .bouton-soumettre {
+      width: 100%;
+      padding: 14px;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .bouton-soumettre:hover { background: var(--rose-fonce); }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--vert);
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(31, 157, 102, 0.3);
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: 0.3s ease;
+      z-index: 1000;
+    }
+    .toast.affiche {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .application { grid-template-columns: 1fr; }
+      .grille { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="application">
+    <!-- Barre latérale -->
+    <aside class="barre-laterale">
+      <div class="marque">
+        <div class="logo-marque">B</div>
+        <div class="nom-marque">Bomengo <small>Ya Mwasi</small></div>
+      </div>
+
+      <div>
+        <p class="titre-navigation">Menu</p>
+        <button class="bouton-navigation actif" onclick="changerVue('dashboard', this)">Vue d'ensemble</button>
+        <button class="bouton-navigation" onclick="changerVue('depenses', this)">Dépenses</button>
+        <button class="bouton-navigation" onclick="changerVue('revenus', this)">Revenus</button>
+        <button class="bouton-navigation" onclick="changerVue('objectifs', this)">Objectifs</button>
+      </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="contenu-principal">
+      <header class="barre-haut">
+        <h1 id="titre-page">Tableau de bord</h1>
+        <div style="display:flex; align-items:center;">
+          <div class="pilule-utilisateur">
+            <div class="avatar" id="avatar-utilisateur">?</div>
+            <div>
+              <strong id="nom-utilisateur">—</strong><br>
+              <small id="role-utilisateur">Utilisatrice</small>
+            </div>
+          </div>
+          <button class="bouton-deconnexion" onclick="deconnexion()">Déconnexion</button>
+        </div>
+      </header>
+
+      <!-- VUE 1: TABLEAU DE BORD -->
+      <div id="vue-dashboard" class="section-vue active">
+        <section class="grille">
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Solde</div>
+              <div class="valeur-indicateur" id="total-solde">0 $</div>
+            </div>
+            <div class="icone-indicateur fond-rose">💰</div>
+          </div>
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Revenus</div>
+              <div class="valeur-indicateur" id="total-revenus">0 $</div>
+            </div>
+            <div class="icone-indicateur fond-vert">↑</div>
+          </div>
+          <div class="carte indicateur">
+            <div>
+              <div class="etiquette-indicateur">Dépenses</div>
+              <div class="valeur-indicateur" id="total-depenses">0 $</div>
+            </div>
+            <div class="icone-indicateur fond-or">↓</div>
+          </div>
+        </section>
+
+        <section class="carte" style="margin-bottom: 20px">
+          <h3 class="titre-section">Activités récentes</h3>
+          <div id="liste-activites">
+            <div class="message-vide">Aucune activité pour le moment</div>
+          </div>
+        </section>
+
+        <section class="carte" style="margin-bottom: 20px">
+          <h3 class="titre-section">Mes objectifs</h3>
+          <div id="liste-objectifs">
+            <div class="message-vide">Aucun objectif créé pour le moment</div>
+          </div>
+        </section>
+
+        <section class="carte">
+          <h3 class="titre-section">Historique des transactions</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Catégorie</th>
+                <th>Date</th>
+                <th>Montant</th>
+              </tr>
+            </thead>
+            <tbody id="corps-tableau-transactions">
+              <tr>
+                <td colspan="4" class="message-vide">Aucune transaction enregistrée</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <!-- VUE 2: FORMULAIRE DÉPENSES -->
+      <div id="vue-depenses" class="section-vue">
+        <div class="carte conteneur-formulaire">
+          <h3 class="titre-section">Ajouter une dépense</h3>
+          <form id="form-depense">
+            <div class="groupe-formulaire">
+              <label>Description</label>
+              <input type="text" id="desc-depense" placeholder="Ex: Courses au marché" required />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Montant</label>
+              <input type="number" id="montant-depense" placeholder="0" required min="1" />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Catégorie</label>
+              <select id="cat-depense">
+                <option>Alimentation</option>
+                <option>Transport</option>
+                <option>Loisirs</option>
+                <option>Santé</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="groupe-formulaire">
+              <label>Date</label>
+              <input type="date" id="date-depense" required />
+            </div>
+            <button type="submit" class="bouton-soumettre">Enregistrer la dépense</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- VUE 3: FORMULAIRE REVENUS -->
+      <div id="vue-revenus" class="section-vue">
+        <div class="carte conteneur-formulaire">
+          <h3 class="titre-section">Ajouter un revenu</h3>
+          <form id="form-revenu">
+            <div class="groupe-formulaire">
+              <label>Description</label>
+              <input type="text" id="desc-revenu" placeholder="Ex: Vente de tissus" required />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Montant</label>
+              <input type="number" id="montant-revenu" placeholder="0" required min="1" />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Catégorie</label>
+              <select id="cat-revenu">
+                <option>Salaire</option>
+                <option>Vente</option>
+                <option>Cadeau</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="groupe-formulaire">
+              <label>Date</label>
+              <input type="date" id="date-revenu" required />
+            </div>
+            <button type="submit" class="bouton-soumettre" style="background: var(--vert)">
+              Enregistrer le revenu
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- VUE 4: FORMULAIRE OBJECTIFS -->
+      <div id="vue-objectifs" class="section-vue">
+        <div class="carte conteneur-formulaire">
+          <h3 class="titre-section">Créer un objectif d'épargne</h3>
+          <form id="form-objectif">
+            <div class="groupe-formulaire">
+              <label>Nom de l'objectif</label>
+              <input type="text" id="nom-objectif" placeholder="Ex: Achat téléphone" required />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Montant cible</label>
+              <input type="number" id="montant-objectif" placeholder="500" required min="1" />
+            </div>
+            <div class="groupe-formulaire">
+              <label>Date limite</label>
+              <input type="date" id="date-objectif" required />
+            </div>
+            <button type="submit" class="bouton-soumettre">Créer l'objectif</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">✅ Enregistré</div>
+
+  <script>
+    // ==========================================
+    // UTILISATEUR CONNECTÉ (SESSION RÉELLE)
+    // ==========================================
+    let utilisateurActuel = null;
+
+    // ==========================================
+    // VÉRIFICATION DE CONNEXION AU CHARGEMENT
+    // ==========================================
+
+    function verifierConnexion() {
+      const session = localStorage.getItem("bomengo_session");
+
+      if (!session) {
+        alert("⚠️ Vous devez vous connecter d'abord.");
+        window.location.href = "/";
+        return false;
+      }
+
+      utilisateurActuel = JSON.parse(session);
+      return true;
+    }
+
+    // ==========================================
+    // DÉCONNEXION
+    // ==========================================
+
+    function deconnexion() {
+      if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+        localStorage.removeItem("bomengo_session");
+        window.location.href = "/";
+      }
+    }
+
+    // ==========================================
+    // AFFICHAGE DES INFORMATIONS UTILISATEUR
+    // ==========================================
+
+    function afficherInfosUtilisateur() {
+      if (!utilisateurActuel) return;
+
+      document.getElementById("nom-utilisateur").textContent = utilisateurActuel.nom || utilisateurActuel.email;
+      document.getElementById("avatar-utilisateur").textContent = (utilisateurActuel.nom || utilisateurActuel.email).charAt(0).toUpperCase();
+      document.getElementById("role-utilisateur").textContent = utilisateurActuel.role || "Utilisatrice";
+    }
+
+    // ==========================================
+    // GESTION DU STOCKAGE LOCAL
+    // ==========================================
+
+    function recupererDonneesUtilisateur() {
+      if (!utilisateurActuel) return { solde: 0, revenus: 0, depenses: 0 };
+      const cle = `bomengo_user_${utilisateurActuel.id}`;
+      const donnees = localStorage.getItem(cle);
+      return donnees ? JSON.parse(donnees) : { solde: 0, revenus: 0, depenses: 0 };
+    }
+
+    function sauvegarderDonneesUtilisateur(donnees) {
+      if (!utilisateurActuel) return;
+      const cle = `bomengo_user_${utilisateurActuel.id}`;
+      localStorage.setItem(cle, JSON.stringify(donnees));
+    }
+
+    function recupererTransactions() {
+      const donnees = localStorage.getItem("bomengo_transactions");
+      return donnees ? JSON.parse(donnees) : [];
+    }
+
+    function sauvegarderTransactions(transactions) {
+      localStorage.setItem("bomengo_transactions", JSON.stringify(transactions));
+    }
+
+    // ==========================================
+    // AJOUT D'UNE TRANSACTION (VISIBLE PAR L'ADMIN)
+    // ==========================================
+
+    function ajouterTransactionGlobale(description, categorie, montant, type) {
+      if (!utilisateurActuel) return;
+
+      const transactions = recupererTransactions();
+
+      const nouvelleTransaction = {
+        id: Date.now(),
+        utilisateurId: utilisateurActuel.id,
+        utilisateurNom: utilisateurActuel.nom,
+        type: type === "entree" ? "dépôt" : "retrait",
+        montant: montant,
+        date: new Date().toISOString(),
+        statut: "réussie",
+        description: description,
+        categorie: categorie
+      };
+
+      transactions.push(nouvelleTransaction);
+      sauvegarderTransactions(transactions);
+
+      let utilisateurs = JSON.parse(localStorage.getItem("bomengo_utilisateurs") || "[]");
+      const index = utilisateurs.findIndex(u => u.id === utilisateurActuel.id);
+      if (index !== -1) {
+        if (type === "entree") {
+          utilisateurs[index].solde = (utilisateurs[index].solde || 0) + montant;
+        } else {
+          utilisateurs[index].solde = Math.max(0, (utilisateurs[index].solde || 0) - montant);
+        }
+        localStorage.setItem("bomengo_utilisateurs", JSON.stringify(utilisateurs));
+      }
+    }
+
+    // ==========================================
+    // NAVIGATION
+    // ==========================================
+
+    function changerVue(nomVue, boutonElement) {
+      document.querySelectorAll(".section-vue").forEach(el => el.classList.remove("active"));
+      document.getElementById("vue-" + nomVue).classList.add("active");
+
+      document.querySelectorAll(".bouton-navigation").forEach(btn => btn.classList.remove("actif"));
+      if (boutonElement) boutonElement.classList.add("actif");
+
+      const titres = {
+        dashboard: "Tableau de bord",
+        depenses: "Gestion des dépenses",
+        revenus: "Gestion des revenus",
+        objectifs: "Mes objectifs"
+      };
+      document.getElementById("titre-page").innerText = titres[nomVue];
+    }
+
+    // ==========================================
+    // AFFICHAGE DES TRANSACTIONS
+    // ==========================================
+
+    function afficherTransactions() {
+      if (!utilisateurActuel) return;
+
+      const transactions = recupererTransactions()
+        .filter(t => t.utilisateurId === utilisateurActuel.id)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      const corpsTableau = document.getElementById("corps-tableau-transactions");
+      const listeActivites = document.getElementById("liste-activites");
+
+      if (transactions.length === 0) {
+        corpsTableau.innerHTML = '<tr><td colspan="4" class="message-vide">Aucune transaction enregistrée</td></tr>';
+        listeActivites.innerHTML = '<div class="message-vide">Aucune activité pour le moment</div>';
+        return;
+      }
+
+      corpsTableau.innerHTML = transactions.map(t => {
+        const dateStr = new Date(t.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+        const type = t.type === "dépôt" ? "entree" : "sortie";
+        const sign = t.type === "dépôt" ? "+" : "-";
+        return `
+          <tr>
+            <td>${t.description}</td>
+            <td>${t.categorie}</td>
+            <td>${dateStr}</td>
+            <td class="montant ${type}">${sign} ${t.montant} $</td>
+          </tr>
+        `;
+      }).join("");
+
+      listeActivites.innerHTML = transactions.slice(0, 5).map(t => {
+        const type = t.type === "dépôt" ? "entree" : "sortie";
+        const cercleClass = type === "entree" ? "cercle vert" : "cercle or";
+        const icon = type === "entree" ? "↑" : "↓";
+        const dateStr = new Date(t.date).toLocaleDateString("fr-FR");
+        return `
+          <div class="element-activite">
+            <div class="${cercleClass}">${icon}</div>
+            <div><strong>${t.description}</strong><span>${t.categorie} · ${t.montant} $</span></div>
+            <span class="mini-etiquette">${dateStr}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // ==========================================
+    // MISE À JOUR DES TOTAUX
+    // ==========================================
+
+    function mettreAJourTotaux() {
+      const donnees = recupererDonneesUtilisateur();
+      const solde = (donnees.revenus || 0) - (donnees.depenses || 0);
+      document.getElementById("total-solde").innerText = solde + " $";
+      document.getElementById("total-revenus").innerText = (donnees.revenus || 0) + " $";
+      document.getElementById("total-depenses").innerText = (donnees.depenses || 0) + " $";
+    }
+
+    function recupererObjectifs() {
+      if (!utilisateurActuel) return [];
+      return JSON.parse(localStorage.getItem(`bomengo_objectifs_${utilisateurActuel.id}`) || "[]");
+    }
+
+    function sauvegarderObjectifs(objectifs) {
+      if (!utilisateurActuel) return;
+      localStorage.setItem(`bomengo_objectifs_${utilisateurActuel.id}`, JSON.stringify(objectifs));
+    }
+
+    function afficherObjectifs() {
+      const liste = document.getElementById("liste-objectifs");
+      const objectifs = recupererObjectifs();
+      if (!liste) return;
+
+      if (objectifs.length === 0) {
+        liste.innerHTML = '<div class="message-vide">Aucun objectif créé pour le moment</div>';
+        return;
+      }
+
+      liste.innerHTML = objectifs.map((objectif) => `
+        <div class="element-activite objectif-apercu">
+          <div class="cercle rose">🎯</div>
+          <div><strong>${objectif.nom}</strong><span>Objectif : ${objectif.montant} $</span></div>
+          <span class="mini-etiquette">${objectif.date || "Sans date"}</span>
+        </div>
+      `).join("");
+    }
+
+    // ==========================================
+    // NOTIFICATION TOAST
+    // ==========================================
+
+    function afficherToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("affiche");
+      setTimeout(() => toast.classList.remove("affiche"), 2500);
+    }
+
+    // ==========================================
+    // GESTION FORMULAIRE DÉPENSE
+    // ==========================================
+
+    document.getElementById("form-depense").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (!utilisateurActuel) return;
+
+      const desc = document.getElementById("desc-depense").value;
+      const amount = parseInt(document.getElementById("montant-depense").value);
+      const cat = document.getElementById("cat-depense").value;
+
+      if (amount > 0) {
+        const donnees = recupererDonneesUtilisateur();
+        donnees.depenses = (donnees.depenses || 0) + amount;
+        sauvegarderDonneesUtilisateur(donnees);
+
+        ajouterTransactionGlobale(desc, cat, amount, "sortie");
+
+        mettreAJourTotaux();
+        afficherTransactions();
+        afficherToast(`✅ Dépense de ${amount} $ enregistrée !`);
+
+        this.reset();
+        document.getElementById("date-depense").valueAsDate = new Date();
+        changerVue("dashboard", document.querySelectorAll(".bouton-navigation")[0]);
+      }
+    });
+
+    // ==========================================
+    // GESTION FORMULAIRE REVENU
+    // ==========================================
+
+    document.getElementById("form-revenu").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (!utilisateurActuel) return;
+
+      const desc = document.getElementById("desc-revenu").value;
+      const amount = parseInt(document.getElementById("montant-revenu").value);
+      const cat = document.getElementById("cat-revenu").value;
+
+      if (amount > 0) {
+        const donnees = recupererDonneesUtilisateur();
+        donnees.revenus = (donnees.revenus || 0) + amount;
+        sauvegarderDonneesUtilisateur(donnees);
+
+        ajouterTransactionGlobale(desc, cat, amount, "entree");
+
+        mettreAJourTotaux();
+        afficherTransactions();
+        afficherToast(`✅ Revenu de ${amount} $ enregistré !`);
+
+        this.reset();
+        document.getElementById("date-revenu").valueAsDate = new Date();
+        changerVue("dashboard", document.querySelectorAll(".bouton-navigation")[0]);
+      }
+    });
+
+    // ==========================================
+    // GESTION FORMULAIRE OBJECTIF
+    // ==========================================
+
+    document.getElementById("form-objectif").addEventListener("submit", function(e) {
+      e.preventDefault();
+      if (!utilisateurActuel) return;
+
+      const nom = document.getElementById("nom-objectif").value;
+      const montant = parseInt(document.getElementById("montant-objectif").value, 10);
+      const date = document.getElementById("date-objectif").value;
+      if (!nom || !montant || montant <= 0) return;
+
+      const objectifs = recupererObjectifs();
+      objectifs.push({ nom, montant, date });
+      sauvegarderObjectifs(objectifs);
+      afficherObjectifs();
+      afficherToast(`🎯 Objectif "${nom}" créé !`);
+      this.reset();
+      changerVue("dashboard", document.querySelectorAll(".bouton-navigation")[0]);
+    });
+
+    // ==========================================
+    // INITIALISATION AU CHARGEMENT
+    // ==========================================
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!verifierConnexion()) return;
+
+      afficherInfosUtilisateur();
+
+      document.getElementById("date-depense").valueAsDate = new Date();
+      document.getElementById("date-revenu").valueAsDate = new Date();
+      document.getElementById("date-objectif").valueAsDate = new Date();
+
+      mettreAJourTotaux();
+      afficherTransactions();
+      afficherObjectifs();
+    });
+  </script>
+</body>
+</html>
